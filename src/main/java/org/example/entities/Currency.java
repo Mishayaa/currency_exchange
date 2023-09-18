@@ -1,16 +1,24 @@
 package org.example.entities;
 
-public class Currencies {
-    int id;
-    String code;
-    String full_name;
-    String sign;
 
-    public Currencies(int id, String code, String fullName, String sign) {
+import lombok.Data;
+import lombok.Getter;
+
+
+public class Currency {
+    private int id;
+    private String code;
+    private String fullName;
+    private String sign;
+
+    public Currency(int id, String code, String fullName, String sign) {
         this.id = id;
         this.code = code;
-        this.full_name = fullName;
+        this.fullName = fullName;
         this.sign = sign;
+    }
+
+    public Currency() {
     }
 
     public int getId() {
@@ -30,11 +38,11 @@ public class Currencies {
     }
 
     public String getFullName() {
-        return full_name;
+        return fullName;
     }
 
     public void setFullName(String fullName) {
-        this.full_name = fullName;
+        this.fullName = fullName;
     }
 
     public String getSign() {
@@ -50,7 +58,7 @@ public class Currencies {
         return "Currency{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
-                ", fullName='" + full_name + '\'' +
+                ", fullName='" + fullName + '\'' +
                 ", sign='" + sign + '\'' +
                 '}';
     }

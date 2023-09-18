@@ -7,13 +7,13 @@ import java.sql.SQLException;
 
 public class DbConnection {
 
-    public static final String URL = "";
-    public static final String USERNAME = "";
-    public static final String PASSWORD = "";
+    public static final String URL = "jdbc:postgresql://localhost:5432/postgres";
+    public static final String USERNAME = "postgres";
+    public static final String PASSWORD = "qwe";
 
     static {
         try {
-            Class.forName("");
+            Class.forName("org.postgresql.Driver");
         } catch (Exception e) {
             e.printStackTrace();
         }

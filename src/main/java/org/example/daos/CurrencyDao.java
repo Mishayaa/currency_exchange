@@ -1,19 +1,18 @@
 package org.example.daos;
 
 import org.example.db.DbConnection;
-import org.example.entities.Currencies;
+import org.example.entities.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.Optional;
 
 public class CurrencyDao extends DbConnection {
 
 
-    public List<Currencies> getAllCurrencies() {
-        List<Currencies> currencies = new ArrayList<>();
+    public List<Currency> getAllCurrencies() {
+        List<Currency> currencies = new ArrayList<>();
 
         String select = "SELECT * FROM currencies";
 
@@ -32,18 +31,18 @@ public class CurrencyDao extends DbConnection {
     }
 
 
-    public Optional<Currencies> getCurrency(String code) {
+    public Currency getCurrency(String code) {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM currencies WHERE code = ?")) {
 
             statement.setString(1, code);
             ResultSet resultSet = statement.executeQuery();
-            Currencies currency = null;
+            Currency currency = null;
             if (resultSet.next()) {
                 currency = createCurrency(resultSet);
             }
             resultSet.close();
-            return Optional.ofNullable(currency);
+            return currency;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -51,7 +50,7 @@ public class CurrencyDao extends DbConnection {
     }
 
 
-    public Currencies addCurrency(Currencies currency) {
+    public void addCurrency(Currency currency) {
         String sql = "INSERT INTO currencies (code, full_name, sign) VALUES (?, ?, ?)";
 
         try (Connection connection = getConnection();
@@ -73,15 +72,34 @@ public class CurrencyDao extends DbConnection {
             e.printStackTrace();
         }
 
-        return currency;
     }
 
-    private Currencies createCurrency(ResultSet resultSet) throws SQLException {
+    private Currency createCurrency(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(1);
         String code = resultSet.getString(2);
         String full_name = resultSet.getString(3);
         String sign = resultSet.getString(4);
-        return new Currencies(id, code, full_name, sign);
+        return new Currency(id, code, full_name, sign);
+    }
+
+    public Currency findById(int id) throws SQLException {
+        try (Connection conn = getConnection()) {
+            PreparedStatement stat = conn.prepareStatement("SELECT * FROM Currencies WHERE id = ?");
+            stat.setInt(1, id);
+            stat.execute();
+            ResultSet rs = stat.getResultSet();
+
+            if (rs.next()) {
+                return new Currency(
+                        rs.getInt("id"),
+                        rs.getString("code"),
+                        rs.getString("full_name"),
+                        rs.getString("sign")
+                );
+            } else return null;
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        }
     }
 
 }
