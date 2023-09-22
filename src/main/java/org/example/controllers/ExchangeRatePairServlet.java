@@ -52,4 +52,24 @@ public class ExchangeRatePairServlet extends HttpServlet {
 
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String pair = req.getPathInfo().substring(1);
+        if (pair.length() != 6) {
+            ExceptionHandler.handleException(400, "You entered incorrect currency pair", resp);
+            return;
+        }
+        try {
+            ExchangeRate exchangeRate = exchangeRatesDao.getExchangeRatePairByCode(pair);
+            if (exchangeRate != null) {
+                ExceptionHandler.handleException(409, "Currency rate with such codes does exist", resp);
+                return;
+            }
+            exchangeRatesDao.create(exchangeRatesDao.getExchangeRatePairByCode(pair));
+            resp.sendRedirect("/currency/" + pair);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

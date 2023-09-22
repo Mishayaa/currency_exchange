@@ -76,29 +76,17 @@ public class ExchangeRatesDao extends DbConnection {
     }
 
 
-//    public ExchangeRate save(ExchangeRate exchangeRates) {
-////        String sql = "INSERT INTO exchange_rate (base_currency_id,target_currency_id,rate) VALUES(?,?,?)";
-////        int rows;
-////        try (Connection connection = getConnection();
-////             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-////
-////
-////            preparedStatement.setLong(2, exchangeRates.getBaseCurrencyId());
-////            preparedStatement.setLong(3, exchangeRates.getTargetCurrencyId());
-////            preparedStatement.setBigDecimal(4, exchangeRates.getRate());
-////
-////            rows = preparedStatement.getUpdateCount();
-////            if (rows > 0) {
-////                ResultSet keys = preparedStatement.getGeneratedKeys();
-////                if (keys.next()) {
-////                    exchangeRates.setId(keys.getInt(1));
-////                }
-////            }
-////
-////        } catch (SQLException e) {
-////            throw new RuntimeException(e);
-////        }
-////        return exchangeRates;
-//    }
+    public void create(ExchangeRate currencyRate) throws SQLException {
+        try (Connection conn = getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO ExchangeRates" +
+                    " VALUES (null, ?, ?, ?)");
+            ps.setInt(1, currencyRate.getBaseCurrency().getId());
+            ps.setInt(2, currencyRate.getTargetCurrency().getId());
+            ps.setBigDecimal(3, currencyRate.getRate());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
 
+    }
 }

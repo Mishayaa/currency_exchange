@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-@WebServlet("/currencies")
+        @WebServlet("/currencies")
 public class CurrencyServlet extends HttpServlet {
     private final CurrencyDao currencyDao;
 
